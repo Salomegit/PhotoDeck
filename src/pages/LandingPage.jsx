@@ -1,6 +1,8 @@
-// pages/Landing.jsx
+import Navbar from "../components/Navbar";
 export default function Landing() {
   return (
+    <>
+      <Navbar />
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
       {/* Hero Section */}
       <div className="w-full bg-blue-600 text-white py-16 px-8 text-center flex flex-col items-center justify-center">
@@ -12,7 +14,7 @@ export default function Landing() {
         </p>
         <button
           className="bg-white text-blue-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center"
-        >
+          >
           Get Started with Google
         </button>
       </div>
@@ -55,5 +57,6 @@ export default function Landing() {
         &copy; {new Date().getFullYear()} Photo Album Explorer. All rights reserved.
       </footer>
     </div>
+          </>
   );
 }

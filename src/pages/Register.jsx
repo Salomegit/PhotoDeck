@@ -1,5 +1,4 @@
 import { useForm } from 'react-hook-form';
-// import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -7,15 +6,15 @@ import { Typography, Link } from '@mui/material';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import SignInWithGoogle from '../components/SignInWithGoogle';
 
 
 
 
 const RegisterForm = () => {
 
-    const navigate = useNavigate(); 
-    const [successMessage, setSuccessMessage] = useState('');   
+    const navigate = useNavigate();
+    const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const {
         register,
@@ -30,7 +29,7 @@ const RegisterForm = () => {
 
 
     const onSubmit = async (data) => {
-        const {email, password } = data;
+        const { email, password } = data;
         try {
             await createUserWithEmailAndPassword(auth, email, password)
             const user = auth.currentUser;
@@ -163,15 +162,16 @@ const RegisterForm = () => {
                     {isSubmitting ? 'Loading...' : 'Submit'}
                 </button>
                 <Typography variant="body2" align="center">
-      <Link 
-        href="#" 
-        onClick={handle_login} 
-        color="primary" 
-        underline="hover"
-      >
-        Already have an account? Login
-      </Link>
-    </Typography>
+                    <Link
+                        href="#"
+                        onClick={handle_login}
+                        color="primary"
+                        underline="hover"
+                    >
+                        Already have an account? Login
+                    </Link>
+                </Typography>
+                <SignInWithGoogle />
                 {/* General Error */}
                 {errors.root && <div className="text-red-500">{errors.root.message}</div>}
             </form>

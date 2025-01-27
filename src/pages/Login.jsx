@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-// import login_api from '../../../endpoints/api';
+import SignInWithGoogle from '../components/SignInWithGoogle';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Link } from '@mui/material';
@@ -22,7 +22,7 @@ const LoginForm = () => {
     await signInWithEmailAndPassword(auth,data.email, data.password)
     console.log("user is logged in successfully")
     setSuccessMessage('User is Logged in successfully')
-    setTimeout(() =>navigate('/') ,1000)
+    setTimeout(() =>navigate('/dashboard') ,1000)
  } catch (error) {
     console.log(error.message)
     setErrorMessage(error.message, 'root')
@@ -91,6 +91,7 @@ const LoginForm = () => {
         Don&apos;t have an account? Register
       </Link>
     </Typography>
+    <SignInWithGoogle />
             {errors.root && <div className="text-red-500">{errors.root.message}</div>}
 
       </form>
