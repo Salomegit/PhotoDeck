@@ -1,8 +1,10 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../services/firebase";
+import { auth,db } from "../services/firebase";
+import { doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'; // Import the CSS
+import { setDoc } from "firebase/firestore";
 
 const SignInWithGoogle = () => {
     const navigate = useNavigate();
@@ -13,12 +15,18 @@ const SignInWithGoogle = () => {
             console.log(result);
 
             if (result.user) {
+                await setDoc(doc(db, 'users', result.user.uid), {
+                    email: result.user.email,
+                    firstName: result.user.displayName,
+                    photo: result.user.photoURL,
+                });
                 toast.success('User is logged in successfully', {
                     position: 'top-center',
                     autoClose: 2000,
                 });
+                }
                 navigate('/dashboard');
-            }
+            
         } catch (error) {
             console.error(error.message);
             toast.error('Failed to sign in with Google', {

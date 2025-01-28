@@ -10,34 +10,38 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const fetchUserDetails = async () => {
+
     try {
-      auth.onAuthStateChanged(async (user) => {
+      const success = auth.onAuthStateChanged(async(user) => {
+        console.log(success)
         if (user) {
-          console.log(user)
+     
 
-          const docRef = doc(db, 'users', user.uid);
-          const docQuery = await getDoc(docRef);
-          if (docQuery.exists()) {
-            setUserDetails(docQuery.data());
-          } else {
-            console.log('User is not Logged in');
-          }
-          setLoading(false);
-        }
-        else {
-          console.log('User is not Logged in');
-        }
-      })
+      const docRef = doc(db, 'users', user.uid);
+      const docQuery = await getDoc(docRef);
+      if (docQuery.exists()) {
+        setUserDetails(docQuery.data());
+      } else {
+        console.log('User is not Logged in');
+      }
+      setLoading(false);
+    }
+    else {
+      console.log('User is not Logged in');
+    }})}
 
-    } catch (error) {
+    catch (error) {
       console.error('Failed to fetch user details:', error);
       setError('Failed to fetch user details. Please try again later.');
       setLoading(false);
     }
   }
+
+
+
   useEffect(() => {
-    fetchUserDetails()
-  }, [])
+    fetchUserDetails();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -46,13 +50,13 @@ export default function Dashboard() {
       navigate('/login')
       console.log('User is Logged out')
     } catch (error) {
-     console.error('Failed to logout:', error);
+      console.error('Failed to logout:', error);
     }
 
   }
 
 
-  if (loading) return
+  if (loading) 
   <div>Loading...</div>
 
 
@@ -63,8 +67,10 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {userDetails && (
             <div className="bg-white p-4 rounded-lg shadow-md">
-              {/* <h2 className="text-xl font-bold text-gray-800 mb-2">{userDetails.first_name}</h2>
-              <p className="text-gray-600">{userDetails.email}</p> */}
+              {/* <h2 className="text-xl font-bold text-gray-800 mb-2">{userDetails.first_name}</h2> */}
+              <img src={userDetails.photo} alt="user photo" className="w-24 h-24 rounded-full mx-auto" />
+              <p className="text-gray-600">{userDetails.firstName}</p>
+              <p className="text-gray-600">{userDetails.email}</p>
               <h2 className="text-xl font-bold text-gray-800 mb-2">{userDetails.displayName}</h2>
             </div>
           )}
@@ -78,5 +84,4 @@ export default function Dashboard() {
         <p>......loading</p>
       )}
     </div>
-  );
-}
+  );}
