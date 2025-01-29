@@ -23,7 +23,7 @@ const Navbar = () => {
       </div>
 
       {/* Links */}
-      <div className="flex space-x-6">
+      <div className="flex space-x-6" >
         <a href="/dashboard" className="text-gray-700 hover:text-gray-900">
           View Dashboard
         </a>

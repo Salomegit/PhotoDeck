@@ -1,87 +1,65 @@
-// pages/HomePage.jsx
 import { useEffect, useState } from 'react';
-import { auth, db } from '../services/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { fetchUsers, fetchUserAlbums } from '../services/api';
+import NavbarDashboard from '../components/DashboardNavbar';
 import { useNavigate } from 'react-router-dom';
 export default function Dashboard() {
-
-  const [userDetails, setUserDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [userLoading, setUserLoading] = useState(true);
   const navigate = useNavigate();
-  const fetchUserDetails = async () => {
-
-    try {
-      const success = auth.onAuthStateChanged(async(user) => {
-        console.log(success)
-        if (user) {
-     
-
-      const docRef = doc(db, 'users', user.uid);
-      const docQuery = await getDoc(docRef);
-      if (docQuery.exists()) {
-        setUserDetails(docQuery.data());
-      } else {
-        console.log('User is not Logged in');
-      }
-      setLoading(false);
-    }
-    else {
-      console.log('User is not Logged in');
-    }})}
-
-    catch (error) {
-      console.error('Failed to fetch user details:', error);
-      setError('Failed to fetch user details. Please try again later.');
-      setLoading(false);
-    }
-  }
-
-
+  const LoadUsersWithAlbums = async () => {
+    const users = await fetchUsers();
+    const usersWithAlbums = await Promise.all(
+      users.map(async (user) => {
+        const albums = await fetchUserAlbums(user.id);
+        return {
+          ...user,
+          albums,
+        };
+      })
+    );
+    setUsers(usersWithAlbums);
+  };
 
   useEffect(() => {
-    fetchUserDetails();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-
-      await auth.signOut();
-      navigate('/login')
-      console.log('User is Logged out')
-    } catch (error) {
-      console.error('Failed to logout:', error);
+    if (!userLoading) {
+      LoadUsersWithAlbums();
     }
+  }, [userLoading]);
 
-  }
-
-
-  if (loading) 
-  <div>Loading...</div>
-
+  const handleViewAlbums = (userId) => {
+    navigate(`/user/${userId}`);
+  };// Fetch users only after user details are loaded
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Users</h1>
-      {userDetails ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {userDetails && (
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              {/* <h2 className="text-xl font-bold text-gray-800 mb-2">{userDetails.first_name}</h2> */}
-              <img src={userDetails.photo} alt="user photo" className="w-24 h-24 rounded-full mx-auto" />
-              <p className="text-gray-600">{userDetails.firstName}</p>
-              <p className="text-gray-600">{userDetails.email}</p>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">{userDetails.displayName}</h2>
-            </div>
-          )}
-          <div className='flex justify-center m-5 p-5'>
+    <div>
+      <NavbarDashboard setUserLoading={setUserLoading} />
+      <div className="container mx-auto p-6 mt-20">
+        <h2 className="text-3xl font-semibold text-gray-800 mb-4">Users List</h2>
 
-            <button onClick={handleLogout} className='m-5 p-5 bg-red-700 text-white'>Logout</button>
+        {userLoading ? (
+          <div className="text-gray-700 text-lg font-semibold">Loading user details...</div>
+        ) : users.length === 0 ? (
+          <div className="text-gray-700 text-lg font-semibold">No users found</div>
+        ) : (
+          <div className="flex flex-col space-y-4">
+            {users.map((user) => (
+              <div
+                key={user.id}
+                className="bg-white p-4 rounded-lg shadow-lg flex justify-between items-center"
+              >
+                <div className="flex items-center space-x-4">
+                  <h3 className="text-lg font-bold text-gray-800">{user.name}</h3>
+                  <p className="text-gray-600">{user.albums.length} albums</p>
+                </div>
+                <button className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onClick={() => handleViewAlbums(user.id)}
+                >
+                  View Album
+                </button>
+              </div>
+            ))}
           </div>
-        </div>
-
-      ) : (
-        <p>......loading</p>
-      )}
+        )}
+      </div>
     </div>
-  );}
+  );
+}
