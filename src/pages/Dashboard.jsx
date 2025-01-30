@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { fetchUsers, fetchUserAlbums } from '../services/api';
-import NavbarDashboard from '../components/DashboardNavbar';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 export default function Dashboard() {
   const [users, setUsers] = useState([]);
-  const [userLoading, setUserLoading] = useState(true);
+  const [loading, setUserLoading] = useState(true);
   const navigate = useNavigate();
   const LoadUsersWithAlbums = async () => {
     const users = await fetchUsers();
@@ -18,25 +18,33 @@ export default function Dashboard() {
       })
     );
     setUsers(usersWithAlbums);
+    setUserLoading(false);
   };
 
   useEffect(() => {
-    if (!userLoading) {
+  
       LoadUsersWithAlbums();
-    }
-  }, [userLoading]);
+    
+  }, []);
 
   const handleViewAlbums = (userId) => {
     navigate(`/user/${userId}`);
-  };// Fetch users only after user details are loaded
+  };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="border-t-4 border-green-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   return (
     <div>
-      <NavbarDashboard setUserLoading={setUserLoading} />
+      <Navbar/>
       <div className="container mx-auto p-6 mt-20">
         <h2 className="text-3xl font-semibold text-gray-800 mb-4">Users List</h2>
 
-        {userLoading ? (
+        { loading ?(
           <div className="text-gray-700 text-lg font-semibold">Loading user details...</div>
         ) : users.length === 0 ? (
           <div className="text-gray-700 text-lg font-semibold">No users found</div>

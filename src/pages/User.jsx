@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchUserAlbums, fetchUsers } from '../services/api';
-import NavbarDashboard from '../components/DashboardNavbar';
-
+import Navbar from '../components/Navbar';
 
 const UserPage = () => {
   const { userId } = useParams();
@@ -13,10 +12,12 @@ const UserPage = () => {
 
   const LoadUserAlbums = async () => {
     try {
-      const success = await fetchUsers();
-      if (success) {
-        const user = success.find((user) => user.id === userId);
-        setUser(user);
+      const users = await fetchUsers();
+      if (users) {
+        const SelectedUser = users.find((user) => user.id === parseInt( userId));
+        if (SelectedUser) {
+          setUser(SelectedUser);
+        }
         const albums = await fetchUserAlbums(userId);
         setAlbums(albums);
         setLoading(false);
@@ -34,13 +35,17 @@ const UserPage = () => {
   useEffect(() => { LoadUserAlbums() }, [userId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="border-t-4 border-green-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+      </div>
+    );
   }
   return (
     <div>
-<NavbarDashboard/>
+<Navbar/>
     <div className="container mx-auto p-6 mt-20">
-      {/* <h1 className="text-3xl font-bold text-gray-800 mb-4">{user.name}</h1> */}
+      <h1 className="text-3xl font-bold text-gray-800 mb-4">{user.name}</h1>
       <h2 className="text-xl font-semibold text-gray-700 mb-4"> View Albums</h2>
       <div className="flex flex-col space-y-4">
         {albums.map((album) => (
