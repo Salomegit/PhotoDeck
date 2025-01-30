@@ -1,7 +1,7 @@
 // src/context/UserContext.js
 import { createContext, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { auth, db } from '../services/firebase'; // Adjust the path to your Firebase config
+import { auth, db } from '../services/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 const UserContext = createContext();
@@ -9,20 +9,33 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userDetails, setUserDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(true); 
 
   // Check if the user is logged in on component mount
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-        const docRef = doc(db, 'users', user.uid);
-        const docQuery = await getDoc(docRef);
-        if (docQuery.exists()) {
-          setUserDetails(docQuery.data());
+      setIsLoading(true)
+      try {
+        
+        if (user) {
+          setIsLoggedIn(true);
+          const docRef = doc(db, 'users', user.uid);
+          const docQuery = await getDoc(docRef);
+          if (docQuery.exists()) {
+            setUserDetails(docQuery.data());
+          }
+        } else {
+          setIsLoggedIn(false);
+          setUserDetails({});
         }
-      } else {
+      } catch (error) {
+        console.error("Auth check failed:", error);
         setIsLoggedIn(false);
         setUserDetails({});
+        
+      }
+      finally {
+        setIsLoading(false);
       }
     });
 
@@ -30,7 +43,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ isLoggedIn, userDetails, setIsLoggedIn, setUserDetails }}>
+    <UserContext.Provider value={{ isLoggedIn, userDetails, setIsLoggedIn, setUserDetails,isLoading }}>
       {children}
     </UserContext.Provider>
   );

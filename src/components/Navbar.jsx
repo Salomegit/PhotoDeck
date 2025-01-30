@@ -1,166 +1,148 @@
 import { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { auth } from '../services/firebase';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { Menu, X } from 'lucide-react';
-import { useUser } from '../contexts/UserAuthContext';
+import { useUser } from '../contexts/UserAuthContext.jsx';
+import React from 'react';
+
+const NavLink = ({ to, children, onClick }) => (
+  <Link
+    to={to}
+    onClick={onClick}
+    className="px-4 py-2 text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-800 hover:text-white transition duration-300"
+  >
+    {children}
+  </Link>
+);
+
+const AuthButton = ({ onClick, children, className }) => (
+  <button
+    onClick={onClick}
+    className={`px-4 py-2 rounded-lg transition-colors ${className}`}
+  >
+    {children}
+  </button>
+);
 
 const Navbar = () => {
-  const { isLoggedIn, userDetails, setIsLoggedIn, setUserDetails } = useUser();
+  const { isLoggedIn, userDetails, isLoading } = useUser();
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
-  // Handle Google Sign-In
   const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      console.log('User signed in:', result.user);
-      navigate('/dashboard'); // Redirect to dashboard after login
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      navigate('/dashboard');
     } catch (error) {
-      console.error('Error during sign-in:', error);
+      console.error('Login error:', error);
     }
   };
 
-  // Handle Logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setIsLoggedIn(false);
-      setUserDetails({});
-      navigate('/'); // Redirect to home after logout
+      navigate('/');
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error('Logout error:', error);
     }
   };
+
+  const UserProfile = () => (
+    <div className="flex items-center gap-2">
+      {userDetails?.photo && (
+        <img
+          src={userDetails.photo}
+          alt="User profile"
+          className="w-10 h-10 rounded-full"
+        />
+      )}
+      <div>
+        <h2 className="font-semibold text-gray-800">
+          {userDetails?.firstName || 'Welcome!'}
+        </h2>
+        <p className="text-sm text-gray-600">{userDetails?.email}</p>
+      </div>
+    </div>
+  );
+
+  const MobileMenu = () => (
+    <div className="md:hidden mt-4 flex flex-col items-center gap-3">
+      {isLoggedIn && (
+        <>
+          {pathname !== '/dashboard' && (
+            <NavLink to="/dashboard" onClick={() => setMenuOpen(false)}>
+              View Dashboard
+            </NavLink>
+          )}
+          {pathname !== '/' && (
+            <NavLink to="/" onClick={() => setMenuOpen(false)}>
+              Go to Home
+            </NavLink>
+          )}
+          <UserProfile />
+          <AuthButton
+            onClick={handleLogout}
+            className="w-full bg-red-600 text-white hover:bg-red-700"
+          >
+            Logout
+          </AuthButton>
+        </>
+      )}
+    </div>
+  );
+
+  if (isLoading) return null; // Or loading skeleton
 
   return (
     <nav className="p-4 bg-blue-100 border-b border-gray-200">
       <div className="flex justify-between items-center max-w-6xl mx-auto">
-        {/* Logo */}
-        <div className="text-xl font-bold text-gray-800">
-          <a href="/">PhotoDeck</a>
-        </div>
+        <Link to="/" className="text-xl font-bold text-gray-800">
+          PhotoDeck
+        </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex gap-6">
-          {isLoggedIn && location.pathname !== '/dashboard' && (
-            <a 
-              href="/dashboard" 
-              className="px-4 py-2 text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-800 hover:text-white transition duration-300"
-            >
-              View Dashboard
-            </a>
-          )}
-          {isLoggedIn && location.pathname !== '/' && (
-            <a 
-              href="/" 
-              className="px-4 py-2 text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-800 hover:text-white transition duration-300"
-            >
-              Go to Home
-            </a>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-
-        {/* Auth Section (Desktop) */}
-        <div className="hidden md:flex items-center space-x-4">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-6">
           {isLoggedIn ? (
             <>
-              <div className="flex items-center space-x-2">
-                {userDetails?.photo && (
-                  <img
-                    src={userDetails.photo}
-                    alt="User"
-                    className="w-10 h-10 rounded-full"
-                  />
+              <div className="flex items-center gap-4">
+                {pathname !== '/dashboard' && (
+                  <NavLink to="/dashboard">View Dashboard</NavLink>
                 )}
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {userDetails?.firstName || 'Welcome...'}
-                  </h2>
-                  <p className="text-sm text-gray-600">{userDetails?.email || ''}</p>
-                </div>
+                {pathname !== '/' && <NavLink to="/">Go to Home</NavLink>}
               </div>
-              {/* Logout Button */}
-              <button
+              <UserProfile />
+              <AuthButton
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                className="bg-red-600 text-white hover:bg-red-700"
               >
                 Logout
-              </button>
+              </AuthButton>
             </>
           ) : (
-            <button
+            <AuthButton
               onClick={handleGoogleSignIn}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              className="bg-blue-500 text-white hover:bg-blue-600"
             >
               Login with Google
-            </button>
+            </AuthButton>
           )}
         </div>
+
+        {/* Mobile Menu Toggle */}
+        <button
+          className="md:hidden p-2"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {menuOpen && (
-        <div className="md:hidden mt-4 flex flex-col items-center space-y-3">
-          {isLoggedIn && location.pathname !== '/dashboard' && (
-            <a 
-              href="/dashboard" 
-              className="w-full text-center px-4 py-2 text-gray-700 font-medium border border-gray-300 shadow-sm rounded-lg hover:bg-gray-800 hover:text-white transition duration-300"
-            >
-              View Dashboard
-            </a>
-          )}
-          {isLoggedIn && location.pathname !== '/' && (
-            <a 
-              href="/" 
-              className="w-full text-center px-4 py-2 text-gray-700 font-medium border border-gray-300 shadow-sm rounded-lg hover:bg-gray-800 hover:text-white transition duration-300"
-            >
-              Go to Home
-            </a>
-          )}
-          
-          {/* Auth Section (Mobile) */}
-          {isLoggedIn ? (
-            <>
-              <div className="flex items-center space-x-2">
-                {userDetails?.photo && (
-                  <img
-                    src={userDetails.photo}
-                    alt="User"
-                    className="w-10 h-10 rounded-full"
-                  />
-                )}
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {userDetails?.firstName || 'Welcome...'}
-                  </h2>
-                  <p className="text-sm text-gray-600">{userDetails?.email || ''}</p>
-                </div>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={handleGoogleSignIn}
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              Login with Google
-            </button>
-          )}
-        </div>
-      )}
+      {/* Mobile Menu */}
+      {menuOpen && <MobileMenu />}
     </nav>
   );
 };

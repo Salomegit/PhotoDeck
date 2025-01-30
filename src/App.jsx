@@ -1,42 +1,39 @@
-import Landing from './pages/LandingPage'
-import Dashboard from './pages/Dashboard'
-import PrivateRoute from './components/ProtectedRoute'
-import UserPage from './pages/User'
-import AlbumPage from './pages/Album'
-import PhotoEdit from './pages/PhotoEdit'
-import { UserProvider } from './contexts/UserAuthContext'
+import Landing from './pages/LandingPage.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import PrivateRoute from './components/ProtectedRoute.jsx'
+import UserPage from './pages/User.jsx'
+import AlbumPage from './pages/Album.jsx'
+import PhotoEdit from './pages/PhotoEdit.jsx'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 function App() {
 
-  return (
-    <Router>
-      <UserProvider>
-      <Routes>
-        
-        <Route path="/" element={<Landing />} />
-        <Route path="/dashboard"  element={
-              <Dashboard />} />
-        <Route element={<PrivateRoute />}>
+      return (
+            <Router>
+                  <Routes>
 
-        <Route path="/user/:userId" element={
-              <UserPage />
-        } />
-        <Route path="/album/:albumId" element={
-              <AlbumPage />
-        } />
-        
-        <Route path="/album/:albumId/photo/:photoId/edit" element={
-              <PhotoEdit />
+                        <Route path="/" element={<Landing />} />
+                        <Route element={<PrivateRoute />}>
+                              <Route path="/dashboard" element={
+                                    <Dashboard />} />
 
-        } />
-        </Route>
+                              <Route path="/albums/:albumId/photos/:photoId/edit" element={
+                                    <PhotoEdit />
 
-      </Routes>
-      </UserProvider>
-      </Router >
+                              } />
+
+                              <Route path="/user/:userId" element={
+                                    <UserPage />
+                              } />
+                              <Route path="/album/:albumId" element={
+                                    <AlbumPage />
+                              } />
+                        </Route>
+
+                  </Routes>
+            </Router >
       )
 }
 
-      export default App;
+export default App;

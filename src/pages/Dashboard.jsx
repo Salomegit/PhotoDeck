@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchUsers, fetchUserAlbums } from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar.jsx';
 export default function Dashboard() {
   const [users, setUsers] = useState([]);
   const [loading, setUserLoading] = useState(true);

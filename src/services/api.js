@@ -26,7 +26,7 @@ export const fetchUserAlbums = async (userId) => {
 export const fetchAlbumPhotos = async (albumId) => {
   try {
     
-    const response = await axios.get(`${API_BASE_URL}/photos?albumId=${albumId}`);
+    const response = await axios.get(`${API_BASE_URL}/albums/${albumId}/photos`);
     return response.data;
   } catch (error) {
     console.error("Error fetching album photos:", error);
