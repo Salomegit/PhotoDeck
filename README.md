@@ -1,8 +1,50 @@
-# React + Vite
+# PhotoDeck 📸
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![Vercel Deployment](https://img.shields.io/badge/production-deployed-%23000000.svg?style=flat&logo=vercel)](https://photodeck.vercel.app)
 
-Currently, two official plugins are available:
+A photo management application powered by [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) with Google authentication.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+
+## Features ✨
+- **Public Landing Page**: Application introduction
+- **Google Authentication**: Secure login/logout
+- **User Dashboard**:
+  - Browse users with album counts
+  - View user profiles and albums
+  - Explore album photos
+  - Edit photo titles 
+- **Responsive Design**: Mobile-first approach for all screen sizes
+
+## Installation ⚙️
+```bash
+# Clone repository
+git clone https://github.com/Salomegit/PhotoDeck.git
+cd photodeck
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+
+## Branch Purpose	Deployment URL
+
+develop  Development	Not deployed
+
+main	Production	https://photodeck.vercel.app
+
+
+Tech Stack 💻
+Frontend: React + Vite
+
+Routing: React Router
+
+Authentication: Firebase Auth
+
+CI/CD: GitHub Actions
+
+Hosting: Vercel
+
+Linting: ESLint
