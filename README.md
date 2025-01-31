@@ -32,12 +32,13 @@ npm run dev
 
 ## Branch Purpose	Deployment URL
 
-develop  Main-dev	Not deployed
+Main-dev  development	Not deployed
 
-main	Dev	https://photodeck.vercel.app
+dev	Prod	https://photodeck.vercel.app
 
 
-Tech Stack 💻
+## Tech Stack 💻
+
 Frontend: React + Vite
 
 Routing: React Router
