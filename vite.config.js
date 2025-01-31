@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import vercel from 'vite-plugin-vercel';
+
 import eslint from 'vite-plugin-eslint';
 
 // https://vite.dev/config/
@@ -9,5 +11,5 @@ export default defineConfig({
   }), eslint({
     fix: true,
     include: ['src/**/*.js', 'src/**/*.jsx']
-  })],
+  }), vercel()],
 })
