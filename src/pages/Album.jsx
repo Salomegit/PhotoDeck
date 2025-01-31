@@ -37,7 +37,7 @@ export default function AlbumPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {photos.map((photo) => (
             <div key={photo.id} className="bg-white p-4 rounded-lg shadow-lg">
-              <img src="../../public/image.jpg" alt="" className="w-32 h-32" />
+              <img src="https://images.pexels.com/photos/30372227/pexels-photo-30372227/free-photo-of-tropical-palm-trees-against-a-clear-sky.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" className="w-32 h-32" />
               <h3 className="text-lg font-bold text-gray-800 mt-2">Photo Title</h3>
               <p className="text-gray-800 mt-2">{photo.title}</p>
               <button
