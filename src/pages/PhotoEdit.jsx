@@ -65,7 +65,7 @@ export default function PhotoEdit() {
       <Navbar />
       <div className="container mx-auto p-6 mt-20">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Edit Photo Title</h1>
-        <img src={photo.url} alt="../../public/image.jpg" className="w-full h-auto mb-4" />
+        <img src="../../public/image.jpg" alt="" className=" w-32 h-32" />
         {editing ? (
           <div>
             <input
