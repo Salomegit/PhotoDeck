@@ -34,7 +34,7 @@ npm run dev
 
 Main-dev  development	Not deployed
 
-dev	Prod	https://photodeck.vercel.app
+dev	Prod	https://photo-deck.vercel.app
 
 
 ## Tech Stack 💻
