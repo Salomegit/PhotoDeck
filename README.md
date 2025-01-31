@@ -17,9 +17,10 @@ A photo management application powered by [JSONPlaceholder API](https://jsonplac
 - **Responsive Design**: Mobile-first approach for all screen sizes
 
 ## Installation ⚙️
-```bash
+
 # Clone repository
 git clone https://github.com/Salomegit/PhotoDeck.git
+
 cd photodeck
 
 # Install dependencies
@@ -31,9 +32,9 @@ npm run dev
 
 ## Branch Purpose	Deployment URL
 
-develop  Development	Not deployed
+develop  Main-dev	Not deployed
 
-main	Production	https://photodeck.vercel.app
+main	Dev	https://photodeck.vercel.app
 
 
 Tech Stack 💻

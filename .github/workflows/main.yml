@@ -1,8 +1,6 @@
 name: PhotoDeck
 
 on:
-  push:
-    branches: [main-sub, dev]
   pull_request:
     branches: [dev ]
 
