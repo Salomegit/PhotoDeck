@@ -65,7 +65,7 @@ export default function PhotoEdit() {
       <Navbar />
       <div className="container mx-auto p-6 mt-20">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Edit Photo Title</h1>
-        <img src="../../public/image.jpg" alt="" className=" w-32 h-32" />
+        <img src="https://images.pexels.com/photos/30372227/pexels-photo-30372227/free-photo-of-tropical-palm-trees-against-a-clear-sky.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" className=" w-32 h-32" />
         {editing ? (
           <div>
             <input
