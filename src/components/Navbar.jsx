@@ -70,7 +70,7 @@ const Navbar = () => {
 
   const MobileMenu = () => (
     <div className="md:hidden mt-4 flex flex-col items-center gap-3">
-      {isLoggedIn && (
+      {isLoggedIn ?  (
         <>
           {pathname !== '/dashboard' && (
             <NavLink to="/dashboard" onClick={() => setMenuOpen(false)}>
@@ -90,7 +90,21 @@ const Navbar = () => {
             Logout
           </AuthButton>
         </>
-      )}
+      ) : (
+
+        
+          <AuthButton
+            onClick={() => {
+              handleGoogleSignIn();
+              setMenuOpen(false);
+            }}
+            className="w-full bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Login with Google
+          </AuthButton>
+        )}
+      
+      
     </div>
   );
 
